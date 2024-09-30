@@ -1,57 +1,91 @@
-import { join } from 'path'
-import { createBot, createProvider, createFlow, addKeyword, utils } from '@builderbot/bot'
+import { createBot, createProvider, createFlow, addKeyword, EVENTS } from '@builderbot/bot'
 import { MemoryDB as Database } from '@builderbot/bot'
 import { BaileysProvider as Provider } from '@builderbot/provider-baileys'
 
+
 const PORT = process.env.PORT ?? 3008
 
-const discordFlow = addKeyword('doc').addAnswer(
-    ['You can see the documentation here', '📄 https://builderbot.app/docs \n', 'Do you want to continue? *yes*'].join(
-        '\n'
-    ),
-    { capture: true },
-    async (ctx, { gotoFlow, flowDynamic }) => {
-        if (ctx.body.toLocaleLowerCase().includes('yes')) {
-            return gotoFlow(registerFlow)
-        }
-        await flowDynamic('Thanks!')
-        return
-    }
-)
-
-const welcomeFlow = addKeyword(['hi', 'hello', 'hola'])
-    .addAnswer(`🙌 Hola, te comunicas con el *Chatbot* de Redetek`)
-    .addAnswer(`Escriba *info* para Informacion sobre los planes `)
-
-const infoFlow = addKeyword(['Info','info'])
-    .addAnswer(`Esta es la Informacion que necesitas:`)
-    
+const welcomeFlow = addKeyword(EVENTS.WELCOME)
+    .addAnswer(`🙌  Hola, te comunicas con el *Chatbot* automático de Redetek, estoy para brindarte la información que necesites.`)
+    .addAnswer(['Ten en cuenta que nuestras oficinas operan en *punto físico* de Lunes a Sábado de 08:00 AM a 05:00 PM, al  igual que nuestra *línea telefónica*: 3080010  '])
+    .addAnswer(`Escribe *planes* para obtener información sobre los planes de servicio disponibles para ti.`)
+    .addAnswer(`Si necesitas soporte técnico, escribe *soporte* para obtener la línea de soporte técnico.`)
 
 
-const registerFlow = addKeyword(utils.setEvent('REGISTER_FLOW'))
-    .addAnswer(`What is your name?`, { capture: true }, async (ctx, { state }) => {
-        await state.update({ name: ctx.body })
-    })
-    .addAnswer('What is your age?', { capture: true }, async (ctx, { state }) => {
-        await state.update({ age: ctx.body })
-    })
-    .addAction(async (_, { flowDynamic, state }) => {
-        await flowDynamic(`${state.get('name')}, thanks for your information!: Your age: ${state.get('age')}`)
-    })
+const planesFlow = addKeyword(['Planes','planes'])
+    .addAnswer(`Donde te encuentras?`)
+    .addAnswer(`Escribe *Bogotá* o *Calarcá* para ver las ubicaciones en las que Redetek tiene cobertura.`)
 
-const fullSamplesFlow = addKeyword(['samples', utils.setEvent('SAMPLES')])
-    .addAnswer(`💪 I'll send you a lot files...`)
-    .addAnswer(`Send image from Local`, { media: join(process.cwd(), 'assets', 'sample.png') })
-    .addAnswer(`Send video from URL`, {
-        media: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYTJ0ZGdjd2syeXAwMjQ4aWdkcW04OWlqcXI3Ynh1ODkwZ25zZWZ1dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LCohAb657pSdHv0Q5h/giphy.mp4',
-    })
-    .addAnswer(`Send audio from URL`, { media: 'https://cdn.freesound.org/previews/728/728142_11861866-lq.mp3' })
-    .addAnswer(`Send file from URL`, {
-        media: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-    })
+const bogotaFlow = addKeyword(['Bogotá','Bogota', 'bogota', 'bogotá'])
+    .addAnswer(`Estas son las localidades en las que tenemos cobertura para *Bogotá*:`)
+    .addAnswer([
+        'ACAPULCO', 
+        'ALCAZARES', 
+        'BELLAVISTA', 
+        'BONANZA', 
+        'BOYACA', 
+        'BOSQUE POPULAR', 
+        'CLARITA', 
+        'CONSOLACION', 
+        'DORADO NORTE', 
+        'EL PASEO', 
+        'ENCANTO', 
+        'ESTRADA', 
+        'ESTRADITA', 
+        'EUROPA', 
+        'GAITAN', 
+        'ISABELLA', 
+        'JUAN XXIII', 
+        'LA AURORA', 
+        'LA CABAÑA', 
+        'LA LIBERTAD', 
+        'LA RELIQUIA', 
+        'LAS FERIAS', 
+        'LAUREL', 
+        'LUJAN', 
+        'ONCE DE NOVIEMBRE', 
+        'PALO BLANCO', 
+        'REAL', 
+        'SAN FERNANDO', 
+        'SANTA HELENITA', 
+        'SANTA MARIA DEL LAGO', 
+        'SANTA SOFIA', 
+        'SIMON BOLIVAR', 
+        'SOLEDAD NORTE', 
+        'STA ISABEL', 
+        'TABORA', 
+        'VILLA LUZ', 
+        'FRAGUITA', 
+        'BALVANERA', 
+        'EDUARDO SANTOS', 
+        'FRAGUA', 
+        'POLICARPA', 
+        'PROGRESO-BOYACA', 
+        'RESTREPO', 
+        'SAN ANTONIO', 
+        'SEVILLA', 
+        'VERGEL'
+      ])
+    .addAnswer(`Si estás ubicado en *VOTO NACIONAL* o *SOLEDAD NORTE PARWEY*, o si eres *Persona Jurídica* estos son los planes disponibles para ti:`)
+    .addAnswer([`100 MEGAS por $92.000`,
+        '300 MEGAS PLUS BANDA ANCHA por $112.000',
+        '500 MEGAS PLUS por $159.000'
+    ])
+    .addAnswer(`Si eres *Persona Natural*, estos son los planes disponibles para ti:`)
+    .addAnswer([`TV e Internet Fibra Optica 200 Megas por $65.000  `,
+        'TV e Internet 300 Megas por $75.000',
+        'TV e Internet 400 Megas por $85.000',
+        'TV e Internet 500 Megas por $95.000'
+    ])
+
+const calarcaFlow = addKeyword(['Bogotá','Bogota', 'bogota', 'bogotá'])
+    .addAnswer(`Hola`)
+
+const soporteFlow = addKeyword(['Soporte','soporte'])
+    .addAnswer(`Para soporte técnico debes comunicarte a la siguiente línea telefónica para *Bogotá*: 6013080010 y para *Calarcá*: 6063080012. Allí tu solicitud será validada en un lapso no mayor a 24 horas hábiles laboradas.`)
 
 const main = async () => {
-    const adapterFlow = createFlow([welcomeFlow, registerFlow, fullSamplesFlow, infoFlow])
+    const adapterFlow = createFlow([welcomeFlow, planesFlow, soporteFlow, planesFlow, bogotaFlow, calarcaFlow])
     
     const adapterProvider = createProvider(Provider)
     const adapterDB = new Database()
