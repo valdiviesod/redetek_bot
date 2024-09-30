@@ -20,11 +20,11 @@ const discordFlow = addKeyword('doc').addAnswer(
 )
 
 const welcomeFlow = addKeyword(['hi', 'hello', 'hola'])
-    .addAnswer(`🙌 Hello welcome to this *Chatbot*`)
-    .addAnswer(`Escriba *info* para Informacion`)
+    .addAnswer(`🙌 Hola, te comunicas con el *Chatbot* de Redetek`)
+    .addAnswer(`Escriba *info* para Informacion sobre los planes `)
 
 const infoFlow = addKeyword(['Info','info'])
-    .addAnswer(`Esta es la Informacion`)
+    .addAnswer(`Esta es la Informacion que necesitas:`)
     
 
 
