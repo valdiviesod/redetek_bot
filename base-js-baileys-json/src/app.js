@@ -195,7 +195,9 @@ const soporteFlow = addKeyword(['Soporte', 'soporte'])
 const main = async () => {
     const adapterFlow = createFlow([welcomeFlow, planesFlow, soporteFlow, planesFlow, bogotaFlow, calarcaFlow, oficinasFlow, contratarFlow, condicionesFlow])
 
-    const adapterProvider = createProvider(Provider)
+    const adapterProvider = createProvider(Provider, { 
+        timeRelease: 300000, // 5 minutes in milliseconds
+    })
     const adapterDB = new Database()
 
     const { handleCtx, httpServer } = await createBot({
