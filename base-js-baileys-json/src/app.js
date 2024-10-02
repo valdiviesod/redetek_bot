@@ -196,6 +196,7 @@ const main = async () => {
     const adapterFlow = createFlow([welcomeFlow, planesFlow, soporteFlow, planesFlow, bogotaFlow, calarcaFlow, oficinasFlow, contratarFlow, condicionesFlow])
 
     const adapterProvider = createProvider(Provider, { 
+        experimentalStore: true,
         timeRelease: 300000, // 5 minutes in milliseconds
     })
     const adapterDB = new Database()
