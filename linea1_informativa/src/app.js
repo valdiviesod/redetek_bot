@@ -7,16 +7,22 @@ const PORT = process.env.PORT ?? 3008
 
 
 const welcomeFlow = addKeyword(EVENTS.WELCOME)
-    .addAnswer(`🙌  Hola, te comunicas con el *Chatbot* automático de Redetek, estoy para colaborarte con el proceso de pago de tus servicios.`)
-    .addAnswer(`Si deseas realizar un pago de manera física, escribe *fisico* para obtener información sobre cómo realizar tus pagos en nuestros puntos físicos.`)
-    .addAnswer(`Si deseas realizar un pago de manera virtual, escribe *virtual* para comenzar con tu proceso de pago en línea.`)
-    
+    .addAnswer(`🙌  Hola, te comunicas con el *Chatbot* automático de Redetek, estoy para brindarte la información que necesites.`)
+    .addAnswer(`Escribe *planes* para obtener información sobre los planes de servicio disponibles para ti.`)
+    .addAnswer(`Si necesitas soporte técnico, escribe *soporte* para obtener la línea de soporte técnico.`)
+    .addAnswer(`Si necesitas la dirección de nuestras oficinas, escribe *oficinas*.`)
+    .addAnswer(['Si deseas realizar el *pago* de tus servicios, comunícate vía Whatsapp a la línea:  3176580234'])
+    .addAnswer(['Ten en cuenta que nuestras oficinas operan en *punto físico* de Lunes a Sábado de 08:00 AM a 05:00 PM en *Bogotá*, al  igual que nuestra *línea telefónica*: 3080010, indicativo 601 '])
+    .addAnswer(['En *Calarcá* nuestras oficinas operan en *punto físico* de Lunes a Sábado de 07:30 AM a Medio día y de Medio día a 06:00 PM, al  igual que nuestra *línea telefónica*: 3080012, indicativo 606  '])
 
-const planesFlow = addKeyword(['Físico', 'físico', 'Fisico', 'fisico'])
+
+
+
+const planesFlow = addKeyword(['Planes', 'planes'])
     .addAnswer(`Donde te encuentras?`)
     .addAnswer(`Escribe *Bogotá* o *Calarcá* para ver las ubicaciones en las que Redetek tiene cobertura.`)
 
-const oficinasFlow = addKeyword(['Oficinas', 'oficina'])
+const oficinasFlow = addKeyword(['Oficinas', 'oficinas'])
     .addAnswer(`Estas son nuestras oficinas en *Bogotá*:`)
     .addAnswer(`San fernando Cra 58# 73-12 `)
     .addAnswer(`La Estrada Cll 66 #69p 39 `)
@@ -26,7 +32,7 @@ const oficinasFlow = addKeyword(['Oficinas', 'oficina'])
     .addAnswer(`San fernando Cra 58# 73-12 `)
 
 const bogotaFlow = addKeyword(['Bogotá', 'Bogota', 'bogota', 'bogotá'])
-    .addAnswer(`Estas son las localidades en las que tenemos cobertura para *Bogotá*:`) 
+    .addAnswer(`Estas son las localidades en las que tenemos cobertura para *Bogotá*:`)
     .addAnswer([
         'ACAPULCO',
         'ALCAZARES',
