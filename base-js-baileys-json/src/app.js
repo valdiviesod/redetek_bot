@@ -64,44 +64,61 @@ const calarcaFlow = addKeyword(['Calarca', 'calarca', 'Calarcá', 'calarcá'])
     ])
     .addAnswer(`Por favor, escribe el nombre de tu barrio.`)
 
-    const barrioFlow = addKeyword(EVENTS.ACTION)
-    .addAnswer((ctx) => {
-        const barrio = ctx.body.toUpperCase();
-        
-        if (selectedCity === 'Bogotá') {
-            const specialBarrios = ['VOTO NACIONAL', 'SOLEDAD NORTE PARWEY'];
-            if (specialBarrios.includes(barrio)) {
-                return [
-                    `En ${barrio}, estos son los planes disponibles para ti:`,
-                    `100 MEGAS por $92.000`,
-                    '300 MEGAS PLUS BANDA ANCHA por $112.000',
-                    '500 MEGAS PLUS por $159.000'
-                ];
-            } else {
-                return `¿Eres persona natural o jurídica? Escribe *natural* o *jurídica* para continuar.`;
-            }
-        } else if (selectedCity === 'Calarcá') {
-            const barriosEspeciales = ['VIRGINIA', 'MARIANO OSPINA', 'CAFETEROS', 'DIVINO NIÑO', 'FERIAS', 'ANTONIO NARIÑO', 'PRADERA BAJA', 'CRISTO REY'];
-            
-            if (barriosEspeciales.includes(barrio)) {
-                return [
-                    `En ${barrio}, estos son los planes disponibles:`,
-                    `50 MEGAS por $40.000`,
-                    '100 MEGAS por $50.000',
-                    '150 MEGAS por $60.000'
-                ];
-            } else {
-                return [
-                    `En ${barrio}, estos son los planes disponibles:`,
-                    `10 MEGAS por $40.000`,
-                    '15 MEGAS por $50.000',
-                    '30 MEGAS por $60.000'
-                ];
-            }
-        } else {
-            return `Lo siento, no reconozco la ciudad seleccionada. Por favor, escribe *Bogotá* o *Calarcá* para comenzar de nuevo.`;
-        }
-    })
+const barriosEspecialesBogotaFlow = addKeyword(['voto nacional', 'soledad norte parwey'])
+    .addAnswer(`Estos son los planes disponibles para ti:`)
+    .addAnswer([
+        `100 MEGAS por $92.000`,
+        '300 MEGAS PLUS BANDA ANCHA por $112.000',
+        '500 MEGAS PLUS por $159.000'
+    ])
+    .addAnswer(`Si estás interesado en alguno de los planes, escribe *contratar*`)
+    .addAnswer(`Si deseas ver las condiciones del servicio, escribe *condiciones*`)
+
+const barriosEspecialesCalarca = addKeyword(['virginia', 'mariano ospina', 'cafeteros', 'divino niño', 'ferias', 'antonio nariño', 'pradera baja', 'cristo rey'])
+    .addAnswer(`Estos son los planes disponibles para ti:`)
+    .addAnswer([
+        `50 MEGAS por $40.000`,
+        '100 MEGAS por $50.000',
+        '150 MEGAS por $60.000'
+    ])
+    .addAnswer(`Si estás interesado en alguno de los planes, escribe *contratar*`)
+    .addAnswer(`Si deseas ver las condiciones del servicio, escribe *condiciones*`)
+
+const barriosBogota = addKeyword(['ACAPULCO', 'ALCAZARES', 'BELLAVISTA', 'BONANZA', 'BOYACA',
+        'BOSQUE POPULAR', 'CLARITA', 'CONSOLACION', 'DORADO NORTE',
+        'EL PASEO', 'ENCANTO', 'ESTRADA', 'ESTRADITA', 'EUROPA',
+        'GAITAN', 'ISABELLA', 'JUAN XXIII', 'LA AURORA', 'LA CABAÑA',
+        'LA LIBERTAD', 'LA RELIQUIA', 'LAS FERIAS', 'LAUREL', 'LUJAN',
+        'ONCE DE NOVIEMBRE', 'PALO BLANCO', 'REAL', 'SAN FERNANDO',
+        'SANTA HELENITA', 'SANTA MARIA DEL LAGO', 'SANTA SOFIA',
+        'SIMON BOLIVAR', 'SOLEDAD NORTE', 'STA ISABEL', 'TABORA',
+        'VILLA LUZ', 'FRAGUITA', 'BALVANERA', 'EDUARDO SANTOS',
+        'FRAGUA', 'POLICARPA', 'PROGRESO-BOYACA', 'RESTREPO',
+        'SAN ANTONIO', 'SEVILLA', 'VERGEL'])
+    .addAnswer(`Si eres persona natural, escribe *natural* y si eres persona juridica escribe *juridica*`)
+
+const barriosCalarca = addKeyword(['ANTONIA SANTOS', 'AV. COLON', 'BALCONES DE LA VILLA',
+        'BALCONES VIEJO', 'BOSQUES DE LA BELLA', 'BUENA VISTA', 
+        'CALDAS', 'CENTRO', 'ECOMAR', 'EL BOSQUE', 'GAITAN', 'GUADUALES', 'HUERTA', 'JARDIN', 'LA BELLA', 'LA FLORESTA',
+        'LA GRAN VIA', 'LA ISLA', 'LA PISTA', 'LA PLAYITA', 'LAS AGUAS',
+        'LAS PALMAS', 'MANANTIAL', 'MIRADOR DE GUADUALES', 'MONTECARLO',
+        'NARANJAL', 'OSCAR TOBON', 'PINAR', 'PLAZUELAS DE LA VILLA',
+        'PORTAL DE BALCONES', 'PORVENIR', 'PRADERA ALTA', 'PRIMAVERA',
+        'RECUERDO', 'SANTA LUISA DE', 'FINCA LA ESPERANZA', 'ASOMECA',
+        'CAMELIAS 2', 'LAURELES', 'LUIS CARLOS GALAN', 'MILCIADES SEGURA', 'POPULAR', 'SAN BERNANDO',
+        'SIMÓN BOLIVAR', 'TERRAQUIMBAYA', 'TERRAZAS DE BUENA VISTA',
+        'VALDEPENA', 'VARSOVIA', 'VERACRUZ', 'VILLA ASTRID CAROLINA',
+        'VILLA GRANDE', 'VILLA ITALIA', 'VILLA JAZMIN', 'VILLA TATIANA',
+        'VILLAS DEL CAFE'])
+    .addAnswer(`Estos son los planes disponibles para ti:`)
+    .addAnswer([
+        `10 MEGAS por $40.000`,
+        '15 MEGAS por $50.000',
+        '30 MEGAS por $60.000'
+    ])
+    .addAnswer(`Si estás interesado en alguno de los planes, escribe *contratar*`)
+    .addAnswer(`Si deseas ver las condiciones del servicio, escribe *condiciones*`)
+
 
 const personaNaturalBogotaFlow = addKeyword(['natural', 'Natural'])
     .addAnswer(`Si eres *Persona Natural* en Bogotá, estos son los planes disponibles para ti:`)
@@ -111,6 +128,8 @@ const personaNaturalBogotaFlow = addKeyword(['natural', 'Natural'])
         'TV e Internet 400 Megas por $85.000',
         'TV e Internet 500 Megas por $95.000'
     ])
+    .addAnswer(`Si estás interesado en alguno de los planes, escribe *contratar*`)
+    .addAnswer(`Si deseas ver las condiciones del servicio, escribe *condiciones*`)
 
 const personaJuridicaBogotaFlow = addKeyword(['jurídica', 'juridica', 'Jurídica', 'Juridica'])
     .addAnswer(`Si eres *Persona Jurídica* en Bogotá estos son los planes disponibles para ti:`)
@@ -119,6 +138,8 @@ const personaJuridicaBogotaFlow = addKeyword(['jurídica', 'juridica', 'Jurídic
         '300 MEGAS PLUS BANDA ANCHA por $112.000',
         '500 MEGAS PLUS por $159.000'
     ])
+    .addAnswer(`Si estás interesado en alguno de los planes, escribe *contratar*`)
+    .addAnswer(`Si deseas ver las condiciones del servicio, escribe *condiciones*`)
 
 const oficinasFlow = addKeyword(['Oficinas', 'oficinas'])
     .addAnswer(`Estas son nuestras oficinas en *Bogotá*:`)
@@ -146,7 +167,7 @@ const soporteFlow = addKeyword(['Soporte', 'soporte'])
     .addAnswer(`Para soporte técnico debes comunicarte a la siguiente línea telefónica para *Bogotá*: 6013080010 y para *Calarcá*: 6063080012. Allí tu solicitud será validada en un lapso no mayor a 24 horas hábiles laboradas.`)
 
 const main = async () => {
-    const adapterFlow = createFlow([welcomeFlow, planesFlow, soporteFlow, planesFlow, bogotaFlow, calarcaFlow, oficinasFlow, contratarFlow, condicionesFlow, barrioFlow, personaJuridicaBogotaFlow, personaNaturalBogotaFlow])
+    const adapterFlow = createFlow([welcomeFlow, planesFlow, soporteFlow, condicionesFlow, contratarFlow, oficinasFlow, personaJuridicaBogotaFlow, personaNaturalBogotaFlow, barriosBogota, barriosCalarca, barriosEspecialesBogotaFlow, barriosEspecialesCalarca, calarcaFlow, bogotaFlow])
 
     const adapterProvider = createProvider(Provider, {
         experimentalStore: true,
