@@ -195,9 +195,14 @@ const soporteFlow = addKeyword(['Soporte', 'soporte'])
 const main = async () => {
     const adapterFlow = createFlow([welcomeFlow, planesFlow, soporteFlow, planesFlow, bogotaFlow, calarcaFlow, oficinasFlow, contratarFlow, condicionesFlow])
 
-    const adapterProvider = createProvider(Provider, { 
+    const adapterProvider = createProvider(Provider, {
         experimentalStore: true,
         timeRelease: 300000, // 5 minutes in milliseconds
+        markReadMessage: true,
+        retryStrategy: {
+            attempts: 3,
+            delay: 5000
+        }
     })
     const adapterDB = new Database()
 
@@ -207,46 +212,83 @@ const main = async () => {
         database: adapterDB,
     })
 
+    // Create a rate limiter that allows 5 requests per second
+    const limiter = new RateLimiter({ tokensPerInterval: 5, interval: "second" });
+
     adapterProvider.server.post(
         '/v1/messages',
         handleCtx(async (bot, req, res) => {
-            const { number, message, urlMedia } = req.body
-            await bot.sendMessage(number, message, { media: urlMedia ?? null })
-            return res.end('sended')
+            try {
+                await limiter.removeTokens(1);
+                const { number, message, urlMedia } = req.body
+                await bot.sendMessage(number, message, { media: urlMedia ?? null })
+                    .catch(err => {
+                        console.error(`Error sending message to ${number}:`, err);
+                        throw err; // Re-throw to be caught by the outer catch
+                    });
+                res.status(200).send('Message sent successfully')
+            } catch (err) {
+                console.error(`Failed to process message for ${req.body.number}:`, err);
+                res.status(500).send('Message processing failed');
+            }
         })
     )
 
-    adapterProvider.server.post(
-        '/v1/register',
-        handleCtx(async (bot, req, res) => {
+adapterProvider.server.post(
+    '/v1/register',
+    handleCtx(async (bot, req, res) => {
+        try {
+            await limiter.removeTokens(1);
             const { number, name } = req.body
             await bot.dispatch('REGISTER_FLOW', { from: number, name })
-            return res.end('trigger')
-        })
-    )
+            res.status(200).send('Register flow triggered successfully')
+        } catch (err) {
+            console.error(`Failed to trigger register flow for ${number}:`, err);
+            res.status(500).send('Flow trigger failed');
+        }
+    })
+)
 
-    adapterProvider.server.post(
-        '/v1/samples',
-        handleCtx(async (bot, req, res) => {
+adapterProvider.server.post(
+    '/v1/samples',
+    handleCtx(async (bot, req, res) => {
+        try {
+            await limiter.removeTokens(1);
             const { number, name } = req.body
             await bot.dispatch('SAMPLES', { from: number, name })
-            return res.end('trigger')
-        })
-    )
+            res.status(200).send('Samples flow triggered successfully')
+        } catch (err) {
+            console.error(`Failed to trigger samples flow for ${number}:`, err);
+            res.status(500).send('Flow trigger failed');
+        }
+    })
+)
 
-    adapterProvider.server.post(
-        '/v1/blacklist',
-        handleCtx(async (bot, req, res) => {
+adapterProvider.server.post(
+    '/v1/blacklist',
+    handleCtx(async (bot, req, res) => {
+        try {
+            await limiter.removeTokens(1);
             const { number, intent } = req.body
             if (intent === 'remove') bot.blacklist.remove(number)
             if (intent === 'add') bot.blacklist.add(number)
+            res.status(200).json({ status: 'ok', number, intent })
+        } catch (err) {
+            console.error(`Failed to modify blacklist for ${number}:`, err);
+            res.status(500).send('Blacklist modification failed');
+        }
+    })
+)
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+    // Aplicación específica: Decidir si terminar el proceso
+    // process.exit(1);
+});
 
-            res.writeHead(200, { 'Content-Type': 'application/json' })
-            return res.end(JSON.stringify({ status: 'ok', number, intent }))
-        })
-    )
-
-    httpServer(+PORT)
+httpServer(+PORT)
 }
 
-main()
+main().catch(err => {
+console.error('Failed to start the bot:', err);
+process.exit(1);
+});
