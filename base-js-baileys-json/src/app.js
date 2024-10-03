@@ -64,12 +64,13 @@ const calarcaFlow = addKeyword(['Calarca', 'calarca', 'Calarcá', 'calarcá'])
     ])
     .addAnswer(`Por favor, escribe el nombre de tu barrio.`)
 
-const barrioFlow = addKeyword(EVENTS.ACTION)
+    const barrioFlow = addKeyword(EVENTS.ACTION)
     .addAnswer((ctx) => {
         const barrio = ctx.body.toUpperCase();
         
         if (selectedCity === 'Bogotá') {
-            if (barrio === 'VOTO NACIONAL' || barrio === 'SOLEDAD NORTE PARWEY') {
+            const specialBarrios = ['VOTO NACIONAL', 'SOLEDAD NORTE PARWEY'];
+            if (specialBarrios.includes(barrio)) {
                 return [
                     `En ${barrio}, estos son los planes disponibles para ti:`,
                     `100 MEGAS por $92.000`,
@@ -97,6 +98,8 @@ const barrioFlow = addKeyword(EVENTS.ACTION)
                     '30 MEGAS por $60.000'
                 ];
             }
+        } else {
+            return `Lo siento, no reconozco la ciudad seleccionada. Por favor, escribe *Bogotá* o *Calarcá* para comenzar de nuevo.`;
         }
     })
 
