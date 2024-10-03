@@ -27,7 +27,6 @@ const planesFlow = addKeyword(['Planes', 'planes'])
 
 const oficinasFlow = addKeyword(['Oficinas', 'oficinas'])
     .addAnswer(`Estas son nuestras oficinas en *Bogotá*:`)
-    .addAnswer(`San fernando Cra 58# 73-12 `)
     .addAnswer(`La Estrada Cll 66 #69p 39 `)
     .addAnswer(`Boyacá Real Cll 69a # 74a 21 `)
     .addAnswer(`Fraguita  Cra 24 #7 - 49sur`)
@@ -237,61 +236,61 @@ const main = async () => {
         })
     )
 
-adapterProvider.server.post(
-    '/v1/register',
-    handleCtx(async (bot, req, res) => {
-        try {
-            await limiter.removeTokens(1);
-            const { number, name } = req.body
-            await bot.dispatch('REGISTER_FLOW', { from: number, name })
-            res.status(200).send('Register flow triggered successfully')
-        } catch (err) {
-            console.error(`Failed to trigger register flow for ${number}:`, err);
-            res.status(500).send('Flow trigger failed');
-        }
-    })
-)
+    adapterProvider.server.post(
+        '/v1/register',
+        handleCtx(async (bot, req, res) => {
+            try {
+                await limiter.removeTokens(1);
+                const { number, name } = req.body
+                await bot.dispatch('REGISTER_FLOW', { from: number, name })
+                res.status(200).send('Register flow triggered successfully')
+            } catch (err) {
+                console.error(`Failed to trigger register flow for ${number}:`, err);
+                res.status(500).send('Flow trigger failed');
+            }
+        })
+    )
 
-adapterProvider.server.post(
-    '/v1/samples',
-    handleCtx(async (bot, req, res) => {
-        try {
-            await limiter.removeTokens(1);
-            const { number, name } = req.body
-            await bot.dispatch('SAMPLES', { from: number, name })
-            res.status(200).send('Samples flow triggered successfully')
-        } catch (err) {
-            console.error(`Failed to trigger samples flow for ${number}:`, err);
-            res.status(500).send('Flow trigger failed');
-        }
-    })
-)
+    adapterProvider.server.post(
+        '/v1/samples',
+        handleCtx(async (bot, req, res) => {
+            try {
+                await limiter.removeTokens(1);
+                const { number, name } = req.body
+                await bot.dispatch('SAMPLES', { from: number, name })
+                res.status(200).send('Samples flow triggered successfully')
+            } catch (err) {
+                console.error(`Failed to trigger samples flow for ${number}:`, err);
+                res.status(500).send('Flow trigger failed');
+            }
+        })
+    )
 
-adapterProvider.server.post(
-    '/v1/blacklist',
-    handleCtx(async (bot, req, res) => {
-        try {
-            await limiter.removeTokens(1);
-            const { number, intent } = req.body
-            if (intent === 'remove') bot.blacklist.remove(number)
-            if (intent === 'add') bot.blacklist.add(number)
-            res.status(200).json({ status: 'ok', number, intent })
-        } catch (err) {
-            console.error(`Failed to modify blacklist for ${number}:`, err);
-            res.status(500).send('Blacklist modification failed');
-        }
-    })
-)
-process.on('unhandledRejection', (reason, promise) => {
-    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-    // Aplicación específica: Decidir si terminar el proceso
-    // process.exit(1);
-});
+    adapterProvider.server.post(
+        '/v1/blacklist',
+        handleCtx(async (bot, req, res) => {
+            try {
+                await limiter.removeTokens(1);
+                const { number, intent } = req.body
+                if (intent === 'remove') bot.blacklist.remove(number)
+                if (intent === 'add') bot.blacklist.add(number)
+                res.status(200).json({ status: 'ok', number, intent })
+            } catch (err) {
+                console.error(`Failed to modify blacklist for ${number}:`, err);
+                res.status(500).send('Blacklist modification failed');
+            }
+        })
+    )
+    process.on('unhandledRejection', (reason, promise) => {
+        console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+        // Aplicación específica: Decidir si terminar el proceso
+        // process.exit(1);
+    });
 
-httpServer(+PORT)
+    httpServer(+PORT)
 }
 
 main().catch(err => {
-console.error('Failed to start the bot:', err);
-process.exit(1);
+    console.error('Failed to start the bot:', err);
+    process.exit(1);
 });
