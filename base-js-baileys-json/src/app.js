@@ -12,11 +12,13 @@ let selectedCity = '';
 const welcomeFlow = addKeyword(EVENTS.WELCOME)
     .addAnswer(`🙌  Hola, te comunicas con el *Chatbot* automático de Redetek, estoy para brindarte la información que necesites.`)
     .addAnswer(`Escribe *planes* para obtener información sobre los planes de servicio disponibles para ti.`)
-    .addAnswer(`Si necesitas soporte técnico, escribe *soporte* para obtener la línea de soporte técnico.`)
+    .addAnswer(`Si necesitas realizar una *Reconexión del servicio* o soporte técnico en general, escribe *soporte* para obtener la línea de soporte técnico.`)
     .addAnswer(`Si necesitas la dirección de nuestras oficinas, escribe *oficinas*.`)
     .addAnswer(['Si deseas realizar el *pago* de tus servicios, comunícate vía Whatsapp a la línea:  3176580234'])
     .addAnswer(['Ten en cuenta que nuestras oficinas operan en *punto físico* de Lunes a Sábado de 08:00 AM a 05:00 PM en *Bogotá*, al  igual que nuestra *línea telefónica*: 3080010, indicativo 601 '])
     .addAnswer(['En *Calarcá* nuestras oficinas operan en *punto físico* de Lunes a Sábado de 07:30 AM a Medio día y de Medio día a 06:00 PM, al  igual que nuestra *línea telefónica*: 3080012, indicativo 606  '])
+    .addAnswer(['Si deseas realizar el *pago* de tus servicios, comunícate vía Whatsapp a la línea:  3176580234'])
+    .addAnswer(['Si deseas cancelar tu servicio, escribe *retiro* para ver las condiciones y el proceso del retiro de nuestro planes '])
 
 const planesFlow = addKeyword(['Planes', 'planes'])
     .addAnswer(`¿Dónde te encuentras?`)
@@ -166,8 +168,11 @@ const condicionesFlow = addKeyword(['Condiciones', 'condiciones'])
 const soporteFlow = addKeyword(['Soporte', 'soporte'])
     .addAnswer(`Para soporte técnico debes comunicarte a la siguiente línea telefónica para *Bogotá*: 6013080010 y para *Calarcá*: 6063080012. Allí tu solicitud será validada en un lapso no mayor a 24 horas hábiles laboradas.`)
 
+const retiroFlow = addKeyword(['Retiro', 'retiro'])
+    .addAnswer(`Para realizar un retiro debe estar al día en pagos (clausula,equipos,mensualidades). Debe entregar el micronodo junto al cargador o el modem junto al cargador *segun los equipos que maneje en la vividenda*. Además debe presentar una carta de retiro junto a la  copia de la cedula del titular. Si la persona que se presenta es un tercero, debe tener también una carta autorizando el retiro al tercero junto a la copia de la cedula del titular y la de quien presenta la solicitud; Todo esto antes del día 1 del mes que no desea que le facturen.`)
+
 const main = async () => {
-    const adapterFlow = createFlow([welcomeFlow, planesFlow, soporteFlow, condicionesFlow, contratarFlow, oficinasFlow, personaJuridicaBogotaFlow, personaNaturalBogotaFlow, barriosBogota, barriosCalarca, barriosEspecialesBogotaFlow, barriosEspecialesCalarca, calarcaFlow, bogotaFlow])
+    const adapterFlow = createFlow([welcomeFlow, planesFlow, soporteFlow, condicionesFlow, contratarFlow, oficinasFlow, personaJuridicaBogotaFlow, personaNaturalBogotaFlow, barriosBogota, barriosCalarca, barriosEspecialesBogotaFlow, barriosEspecialesCalarca, calarcaFlow, bogotaFlow, retiroFlow])
 
     const adapterProvider = createProvider(Provider, {
         experimentalStore: true,
