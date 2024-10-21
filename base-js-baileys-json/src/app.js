@@ -86,31 +86,31 @@ const barriosEspecialesCalarca = addKeyword(['virginia', 'mariano ospina', 'cafe
     .addAnswer(`Si deseas ver las condiciones del servicio, escribe *condiciones*`)
 
 const barriosBogota = addKeyword(['ACAPULCO', 'ALCAZARES', 'BELLAVISTA', 'BONANZA', 'BOYACA',
-        'BOSQUE POPULAR', 'CLARITA', 'CONSOLACION', 'DORADO NORTE',
-        'EL PASEO', 'ENCANTO', 'ESTRADA', 'ESTRADITA', 'EUROPA',
-        'GAITAN', 'ISABELLA', 'JUAN XXIII', 'LA AURORA', 'LA CABAÑA',
-        'LA LIBERTAD', 'LA RELIQUIA', 'LAS FERIAS', 'LAUREL', 'LUJAN',
-        'ONCE DE NOVIEMBRE', 'PALO BLANCO', 'REAL', 'SAN FERNANDO',
-        'SANTA HELENITA', 'SANTA MARIA DEL LAGO', 'SANTA SOFIA',
-        'SIMON BOLIVAR', 'SOLEDAD NORTE', 'STA ISABEL', 'TABORA',
-        'VILLA LUZ', 'FRAGUITA', 'BALVANERA', 'EDUARDO SANTOS',
-        'FRAGUA', 'POLICARPA', 'PROGRESO-BOYACA', 'RESTREPO',
-        'SAN ANTONIO', 'SEVILLA', 'VERGEL'])
+    'BOSQUE POPULAR', 'CLARITA', 'CONSOLACION', 'DORADO NORTE',
+    'EL PASEO', 'ENCANTO', 'ESTRADA', 'ESTRADITA', 'EUROPA',
+    'GAITAN', 'ISABELLA', 'JUAN XXIII', 'LA AURORA', 'LA CABAÑA',
+    'LA LIBERTAD', 'LA RELIQUIA', 'LAS FERIAS', 'LAUREL', 'LUJAN',
+    'ONCE DE NOVIEMBRE', 'PALO BLANCO', 'REAL', 'SAN FERNANDO',
+    'SANTA HELENITA', 'SANTA MARIA DEL LAGO', 'SANTA SOFIA',
+    'SIMON BOLIVAR', 'SOLEDAD NORTE', 'STA ISABEL', 'TABORA',
+    'VILLA LUZ', 'FRAGUITA', 'BALVANERA', 'EDUARDO SANTOS',
+    'FRAGUA', 'POLICARPA', 'PROGRESO-BOYACA', 'RESTREPO',
+    'SAN ANTONIO', 'SEVILLA', 'VERGEL'])
     .addAnswer(`Si eres persona natural, escribe *natural* y si eres persona juridica escribe *juridica*`)
 
 const barriosCalarca = addKeyword(['ANTONIA SANTOS', 'AV. COLON', 'BALCONES DE LA VILLA',
-        'BALCONES VIEJO', 'BOSQUES DE LA BELLA', 'BUENA VISTA', 
-        'CALDAS', 'CENTRO', 'ECOMAR', 'EL BOSQUE', 'GAITAN', 'GUADUALES', 'HUERTA', 'JARDIN', 'LA BELLA', 'LA FLORESTA',
-        'LA GRAN VIA', 'LA ISLA', 'LA PISTA', 'LA PLAYITA', 'LAS AGUAS',
-        'LAS PALMAS', 'MANANTIAL', 'MIRADOR DE GUADUALES', 'MONTECARLO',
-        'NARANJAL', 'OSCAR TOBON', 'PINAR', 'PLAZUELAS DE LA VILLA',
-        'PORTAL DE BALCONES', 'PORVENIR', 'PRADERA ALTA', 'PRIMAVERA',
-        'RECUERDO', 'SANTA LUISA DE', 'FINCA LA ESPERANZA', 'ASOMECA',
-        'CAMELIAS 2', 'LAURELES', 'LUIS CARLOS GALAN', 'MILCIADES SEGURA', 'POPULAR', 'SAN BERNANDO',
-        'SIMÓN BOLIVAR', 'TERRAQUIMBAYA', 'TERRAZAS DE BUENA VISTA',
-        'VALDEPENA', 'VARSOVIA', 'VERACRUZ', 'VILLA ASTRID CAROLINA',
-        'VILLA GRANDE', 'VILLA ITALIA', 'VILLA JAZMIN', 'VILLA TATIANA',
-        'VILLAS DEL CAFE'])
+    'BALCONES VIEJO', 'BOSQUES DE LA BELLA', 'BUENA VISTA',
+    'CALDAS', 'CENTRO', 'ECOMAR', 'EL BOSQUE', 'GAITAN', 'GUADUALES', 'HUERTA', 'JARDIN', 'LA BELLA', 'LA FLORESTA',
+    'LA GRAN VIA', 'LA ISLA', 'LA PISTA', 'LA PLAYITA', 'LAS AGUAS',
+    'LAS PALMAS', 'MANANTIAL', 'MIRADOR DE GUADUALES', 'MONTECARLO',
+    'NARANJAL', 'OSCAR TOBON', 'PINAR', 'PLAZUELAS DE LA VILLA',
+    'PORTAL DE BALCONES', 'PORVENIR', 'PRADERA ALTA', 'PRIMAVERA',
+    'RECUERDO', 'SANTA LUISA DE', 'FINCA LA ESPERANZA', 'ASOMECA',
+    'CAMELIAS 2', 'LAURELES', 'LUIS CARLOS GALAN', 'MILCIADES SEGURA', 'POPULAR', 'SAN BERNANDO',
+    'SIMÓN BOLIVAR', 'TERRAQUIMBAYA', 'TERRAZAS DE BUENA VISTA',
+    'VALDEPENA', 'VARSOVIA', 'VERACRUZ', 'VILLA ASTRID CAROLINA',
+    'VILLA GRANDE', 'VILLA ITALIA', 'VILLA JAZMIN', 'VILLA TATIANA',
+    'VILLAS DEL CAFE'])
     .addAnswer(`Estos son los planes disponibles para ti:`)
     .addAnswer([
         `10 MEGAS por $40.000`,
@@ -175,12 +175,8 @@ const main = async () => {
 
     const adapterProvider = createProvider(Provider, {
         experimentalStore: true,
-        timeRelease: 300000, // 5 minutes in milliseconds
+        timeRelease: 60000, // 1 minute in milliseconds
         markReadMessage: true,
-        retryStrategy: {
-            attempts: 3,
-            delay: 5000
-        }
     })
     const adapterDB = new Database()
 
@@ -190,8 +186,8 @@ const main = async () => {
         database: adapterDB,
     })
 
-    // Create a rate limiter that allows 5 requests per second
-    const limiter = new RateLimiter({ tokensPerInterval: 5, interval: "second" });
+    // Create a rate limiter that allows 3 requests per second
+    const limiter = new RateLimiter({ tokensPerInterval: 3, interval: "second" });
 
     adapterProvider.server.post(
         '/v1/messages',
@@ -259,8 +255,7 @@ const main = async () => {
     )
     process.on('unhandledRejection', (reason, promise) => {
         console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-        // Aplicación específica: Decidir si terminar el proceso
-        // process.exit(1);
+        // Aplicación específica
     });
 
     httpServer(+PORT)
